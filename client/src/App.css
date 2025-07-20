@@ -1,0 +1,38 @@
+body {
+  font-family: sans-serif;
+  margin: 0; padding: 0;
+  background: #f5f6f5;
+}
+.home-container, .form, .dashboard {
+  max-width: 360px;
+  margin: 2rem auto;
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 16px #eee;
+}
+.button-group {
+  display: flex; gap: 1rem;
+}
+.btn, .btn-outline {
+  appearance: none;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.btn-primary { background: #6ac237; color: #fff; }
+.btn-outline { border: 2px solid #6ac237; color: #6ac237; background: #fff; }
+.btn-logout { float: right; background: #ddd; color: #444; }
+.form input { width: 100%; margin-bottom: 1rem; padding: 0.75rem; border-radius: 6px; border: 1px solid #ddd; }
+.form button { width: 100%; }
+.error { color: #d34; margin: 0.5rem 0; }
+.forecast-container { margin-top: 2rem; }
+.forecast-scroll { display: flex; overflow-x: auto; gap: 1rem; }
+.forecast-card { flex: 0 0 120px; background: #eafbe6; border-radius: 8px; padding: 1rem; text-align: center; }
+@media (min-width: 768px) {
+  .home-container, .form, .dashboard { max-width: 700px; }
+  .forecast-scroll { justify-content: center; }
+}
