@@ -4,12 +4,16 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../App.css";
 
+// Import the logo as a module
+import logo from "../logo.png";
+
 export default function Homepage() {
   return (
     <>
       {/* Logo Header */}
       <div className="header-logo">
-        <img src="/logo.png" alt="Agricog Assist Logo" />
+        {/* Use the imported logo */}
+        <img src={logo} alt="Agricog Assist Logo" />
       </div>
 
       {/* Centered Page Content */}
