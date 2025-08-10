@@ -1,5 +1,6 @@
+// src/components/PerplexityChat.jsx
+
 import React, { useState } from "react";
-import "../App.css";
 
 export default function PerplexityChat() {
   const [question, setQuestion] = useState("");
@@ -22,7 +23,6 @@ export default function PerplexityChat() {
           body: JSON.stringify({ question }),
         }
       );
-
       if (!res.ok) {
         const data = await res.json();
         setError(data.message || "Failed to fetch response");
@@ -37,32 +37,88 @@ export default function PerplexityChat() {
     }
   }
 
+  const containerStyle = {
+    background: "#fff",
+    border: "1px solid #e2e8f0",
+    borderRadius: "8px",
+    padding: "20px",
+    marginTop: "24px",
+    maxWidth: "600px",
+    fontFamily: "Arial, sans-serif",
+  };
+
+  const titleStyle = {
+    marginBottom: "16px",
+    fontSize: "20px",
+    color: "#2d3748",
+  };
+
+  const formStyle = {
+    display: "flex",
+    gap: "12px",
+    marginBottom: "16px",
+  };
+
+  const textareaStyle = {
+    flex: 1,
+    padding: "12px",
+    border: "1px solid #cbd5e0",
+    borderRadius: "6px",
+    fontSize: "16px",
+    resize: "vertical",
+    fontFamily: "inherit",
+  };
+
+  const buttonStyle = {
+    padding: "12px 24px",
+    backgroundColor: loading ? "#a0aec0" : "#48bb78",
+    color: "#fff",
+    border: "none",
+    borderRadius: "6px",
+    fontSize: "16px",
+    cursor: loading ? "not-allowed" : "pointer",
+  };
+
+  const errorStyle = {
+    color: "#e53e3e",
+    marginBottom: "16px",
+  };
+
+  const answerContainerStyle = {
+    backgroundColor: "#edf2f7",
+    borderLeft: "4px solid #48bb78",
+    borderRadius: "4px",
+    padding: "16px",
+    color: "#2d3748",
+    lineHeight: "1.6",
+  };
+
   return (
-    <div className="perplexity-chat-container">
-      <h3 className="chat-title">Live Info Chat</h3>
-      <form className="chat-form" onSubmit={handleSubmit}>
+    <div style={containerStyle}>
+      <h3 style={titleStyle}>Live Info Chat</h3>
+      <form style={formStyle} onSubmit={handleSubmit}>
         <textarea
-          className="chat-input"
-          placeholder="Ask a farming question..."
+          style={textareaStyle}
+          placeholder="Ask a farming question…"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           rows={3}
           disabled={loading}
           required
         />
-        <button className="chat-button" type="submit" disabled={loading}>
-          {loading ? "Thinking..." : "Ask"}
+        <button style={buttonStyle} type="submit" disabled={loading}>
+          {loading ? "Thinking…" : "Ask"}
         </button>
       </form>
 
-      {error && <div className="chat-error">{error}</div>}
+      {error && <div style={errorStyle}>{error}</div>}
 
       {answer && (
-        <div className="chat-answer">
+        <div style={answerContainerStyle}>
           {answer
             .split("\n\n")
             .map((para, i) => (
-              <p key={i} className="answer-paragraph">
+              <p key={i} style={{ margin: "0 0 12px" }}>
                 {para}
               </p>
             ))}
@@ -71,6 +127,7 @@ export default function PerplexityChat() {
     </div>
   );
 }
+
 
 
 
