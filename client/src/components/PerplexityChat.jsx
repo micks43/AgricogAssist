@@ -1,33 +1,37 @@
+// src/components/PerplexityChat.jsx
+
 import React, { useState } from "react";
+import "../App.css";
 
 export default function PerplexityChat() {
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  async function sendMessage(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    if (!input.trim()) return;
-
-    const newMessage = { role: "user", content: input };
-    const updated = [...messages, newMessage];
-    setMessages(updated);
-    setInput("");
+    setError("");
+    setAnswer("");
     setLoading(true);
 
     try {
-      const res = await fetch("/api/perplexity-chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: updated }),
-      });
+      const res = await fetch(
+        "https://agricogassist-backend.onrender.com/api/perplexity",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question }),
+        }
+      );
       const data = await res.json();
-      setMessages([...updated, { role: "assistant", content: data.content }]);
+      if (res.ok) {
+        setAnswer(data.answer);
+      } else {
+        setError(data.message || "Failed to fetch response");
+      }
     } catch {
-      setMessages([
-        ...updated,
-        { role: "assistant", content: "Error: couldn't reach Perplexity." },
-      ]);
+      setError("Server error");
     } finally {
       setLoading(false);
     }
@@ -35,42 +39,21 @@ export default function PerplexityChat() {
 
   return (
     <div className="perplexity-chat">
-      <div className="chat-messages">
-        {messages.map((msg, i) => (
-          <div key={i} className={`message ${msg.role}`}>
-            <div className="message-header">
-              <strong>{msg.role === 'user' ? 'You:' : 'AI:'}</strong>
-            </div>
-            <div className="message-content">
-              {msg.content}
-            </div>
-          </div>
-        ))}
-        {loading && (
-          <div className="message assistant">
-            <div className="message-header">
-              <strong>AI:</strong>
-            </div>
-            <div className="message-content">
-              Thinking...
-            </div>
-          </div>
-        )}
-      </div>
-      
-      <form onSubmit={sendMessage} className="chat-input-form">
+      <form onSubmit={handleSubmit}>
         <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask about live market prices, weather, farming advice..."
+          placeholder="Ask a farming question..."
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
           required
         />
         <button type="submit" disabled={loading}>
-          {loading ? "Sending..." : "Send"}
+          {loading ? "Thinking..." : "Ask"}
         </button>
       </form>
+      {error && <div className="error">{error}</div>}
+      {answer && <div className="answer">{answer}</div>}
     </div>
   );
 }
+
 
