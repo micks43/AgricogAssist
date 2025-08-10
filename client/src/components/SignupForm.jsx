@@ -1,3 +1,5 @@
+// client/src/components/SignupForm.jsx
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -16,9 +18,11 @@ export default function SignupForm() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setError("");
+
     try {
       const res = await fetch(
-        "https://agricogassist-backend.onrender.com/api/signup",
+        "https://api.agricogassist.com/api/signup",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -32,7 +36,9 @@ export default function SignupForm() {
           }),
         }
       );
+
       const data = await res.json();
+
       if (res.ok) {
         login(data.token, data.name, data.farmName);
         navigate("/dashboard");
@@ -45,52 +51,51 @@ export default function SignupForm() {
   }
 
   return (
-    <div className="auth-container">
-      <form className="form" onSubmit={handleSubmit}>
-        <h2>Sign Up</h2>
-        {error && <div className="error">{error}</div>}
-        <input
-          placeholder="Your Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <input
-          placeholder="Email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          placeholder="Password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <input
-          placeholder="Farm Name"
-          value={farmName}
-          onChange={(e) => setFarmName(e.target.value)}
-          required
-        />
-        <input
-          placeholder="Location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          required
-        />
-        <input
-          placeholder="Farm Type"
-          value={farmType}
-          onChange={(e) => setFarmType(e.target.value)}
-          required
-        />
-        <button type="submit">Sign Up</button>
-      </form>
-    </div>
+    <form className="form" onSubmit={handleSubmit}>
+      <h2>Sign Up</h2>
+      {error && <div className="error">{error}</div>}
+      <input
+        placeholder="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+      />
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+      <input
+        placeholder="Farm Name"
+        value={farmName}
+        onChange={(e) => setFarmName(e.target.value)}
+        required
+      />
+      <input
+        placeholder="Location"
+        value={location}
+        onChange={(e) => setLocation(e.target.value)}
+        required
+      />
+      <input
+        placeholder="Farm Type"
+        value={farmType}
+        onChange={(e) => setFarmType(e.target.value)}
+        required
+      />
+      <button type="submit">Sign Up</button>
+    </form>
   );
 }
+
 
 

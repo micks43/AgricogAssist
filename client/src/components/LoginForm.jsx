@@ -1,3 +1,5 @@
+// client/src/components/LoginForm.jsx
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -6,22 +8,26 @@ import "../App.css";
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [error, setError] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setError("");
+
     try {
       const res = await fetch(
-        "https://agricogassist-backend.onrender.com/api/login",
+        "https://api.agricogassist.com/api/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
         }
       );
+
       const data = await res.json();
+
       if (res.ok) {
         login(data.token, data.name, data.farmName);
         navigate("/dashboard");
@@ -34,29 +40,28 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="auth-container">
-      <form className="form" onSubmit={handleSubmit}>
-        <h2>Log In</h2>
-        {error && <div className="error">{error}</div>}
-        <input
-          placeholder="Email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          placeholder="Password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Log In</button>
-      </form>
-    </div>
+    <form className="form" onSubmit={handleSubmit}>
+      <h2>Log In</h2>
+      {error && <div className="error">{error}</div>}
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+      <button type="submit">Log In</button>
+    </form>
   );
 }
+
 
 
 
