@@ -20,7 +20,7 @@ export default function LoginForm() {
       });
       const data = await res.json();
       if (res.ok) {
-        login(data.token, data.name);
+        login(data.token, data.name, data.farmName);
         navigate("/dashboard");
       } else {
         setError(data.message || "Login failed");
@@ -40,3 +40,4 @@ export default function LoginForm() {
     </form>
   );
 }
+

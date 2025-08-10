@@ -32,6 +32,90 @@ body {
 .forecast-container { margin-top: 2rem; }
 .forecast-scroll { display: flex; overflow-x: auto; gap: 1rem; }
 .forecast-card { flex: 0 0 120px; background: #eafbe6; border-radius: 8px; padding: 1rem; text-align: center; }
+
+/* Perplexity Chat Styles */
+.perplexity-chat {
+  max-width: 100%;
+  margin: 0;
+}
+
+.chat-messages {
+  max-height: 500px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.message {
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  line-height: 1.6;
+}
+
+.message.user {
+  background-color: #e3f2fd;
+  border-left: 4px solid #2196f3;
+}
+
+.message.assistant {
+  background-color: #f1f8e9;
+  border-left: 4px solid #4caf50;
+}
+
+.message-header {
+  margin-bottom: 8px;
+}
+
+.message-header strong {
+  font-size: 14px;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.message-content {
+  font-size: 16px;
+  color: #333;
+  white-space: pre-wrap;
+}
+
+.chat-input-form {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.chat-input-form input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.chat-input-form button {
+  padding: 12px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.chat-input-form button:hover {
+  background-color: #45a049;
+}
+
+.chat-input-form button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
 @media (min-width: 768px) {
   .home-container, .form, .dashboard { max-width: 700px; }
   .forecast-scroll { justify-content: center; }
