@@ -1,4 +1,4 @@
-/* src/App.css */
+/* client/src/App.css */
 
 /* Global Styles */
 body {
@@ -26,8 +26,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: start;
-  min-height: calc(100vh - 4rem); /* account for logo padding */
+  justify-content: center;    /* center vertically */
+  height: calc(100vh - 4rem); /* full viewport minus logo padding */
   padding: 1rem;
   background: #ffffff;
 }
@@ -35,8 +35,6 @@ body {
 /* Homepage Hero */
 .homepage-hero {
   text-align: center;
-  margin-top: 2rem;
-  background: #ffffff;
 }
 
 .homepage-hero h1 {
@@ -129,7 +127,6 @@ body {
 }
 
 /* Perplexity Chat Styles */
-
 .perplexity-chat-container {
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -198,5 +195,6 @@ body {
 .answer-paragraph:last-child {
   margin-bottom: 0;
 }
+
 
 
