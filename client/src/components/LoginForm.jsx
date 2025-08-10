@@ -1,3 +1,4 @@
+// src/components/LoginForm.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -13,11 +14,14 @@ export default function LoginForm() {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const res = await fetch(
+        "https://agricogassist-backend.onrender.com/api/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
       const data = await res.json();
       if (res.ok) {
         login(data.token, data.name, data.farmName);
@@ -25,7 +29,7 @@ export default function LoginForm() {
       } else {
         setError(data.message || "Login failed");
       }
-    } catch (err) {
+    } catch {
       setError("Server error");
     }
   }
@@ -40,4 +44,5 @@ export default function LoginForm() {
     </form>
   );
 }
+
 

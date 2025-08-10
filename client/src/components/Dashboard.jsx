@@ -1,3 +1,5 @@
+// src/components/Dashboard.jsx
+
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import WeatherForecast from "./WeatherForecast";
@@ -15,7 +17,9 @@ export default function Dashboard() {
     setError("");
     try {
       const res = await fetch(
-        `/api/weather?location=${encodeURIComponent(location)}`
+        `https://agricogassist-backend.onrender.com/api/weather?location=${encodeURIComponent(
+          location
+        )}`
       );
       const data = await res.json();
       if (res.ok) setForecast(data);
@@ -69,4 +73,5 @@ export default function Dashboard() {
     </div>
   );
 }
+
 
