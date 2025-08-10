@@ -1,4 +1,5 @@
 // src/components/LoginForm.jsx
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -35,14 +36,29 @@ export default function LoginForm() {
   }
 
   return (
-    <form className="form" onSubmit={handleSubmit}>
-      <h2>Log In</h2>
-      {error && <div className="error">{error}</div>}
-      <input placeholder="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} required />
-      <input placeholder="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} required />
-      <button type="submit">Log In</button>
-    </form>
+    <div className="auth-container">
+      <form className="form" onSubmit={handleSubmit}>
+        <h2>Log In</h2>
+        {error && <div className="error">{error}</div>}
+        <input
+          placeholder="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          placeholder="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <button type="submit">Log In</button>
+      </form>
+    </div>
   );
 }
+
 
 

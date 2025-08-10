@@ -1,4 +1,5 @@
 // src/components/SignupForm.jsx
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -33,23 +34,57 @@ export default function SignupForm() {
       } else {
         setError(data.message || "Signup failed");
       }
-    } catch (err) {
+    } catch {
       setError("Server error");
     }
   }
 
   return (
-    <form className="form" onSubmit={handleSubmit}>
-      <h2>Sign Up</h2>
-      {error && <div className="error">{error}</div>}
-      <input placeholder="Your Name" value={name} onChange={e => setName(e.target.value)} required />
-      <input placeholder="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} required />
-      <input placeholder="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} required />
-      <input placeholder="Farm Name" value={farmName} onChange={e => setFarmName(e.target.value)} required />
-      <input placeholder="Location" value={location} onChange={e => setLocation(e.target.value)} required />
-      <input placeholder="Farm Type" value={farmType} onChange={e => setFarmType(e.target.value)} required />
-      <button type="submit">Sign Up</button>
-    </form>
+    <div className="auth-container">
+      <form className="form" onSubmit={handleSubmit}>
+        <h2>Sign Up</h2>
+        {error && <div className="error">{error}</div>}
+        <input
+          placeholder="Your Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+        <input
+          placeholder="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          placeholder="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <input
+          placeholder="Farm Name"
+          value={farmName}
+          onChange={(e) => setFarmName(e.target.value)}
+          required
+        />
+        <input
+          placeholder="Location"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          required
+        />
+        <input
+          placeholder="Farm Type"
+          value={farmType}
+          onChange={(e) => setFarmType(e.target.value)}
+          required
+        />
+        <button type="submit">Sign Up</button>
+      </form>
+    </div>
   );
 }
 

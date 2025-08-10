@@ -1,16 +1,25 @@
+// src/components/Homepage.jsx
+
 import React from "react";
 import { Link } from "react-router-dom";
 import "../App.css";
 
 export default function Homepage() {
   return (
-    <div className="home-container">
-      <h1>🌾 FarmWeather</h1>
-      <p>Accurate 7-day forecasts for every UK postcode.</p>
-      <div className="button-group">
-        <Link to="/signup" className="btn btn-primary">Sign Up</Link>
-        <Link to="/login" className="btn btn-outline">Log In</Link>
+    <div className="homepage-hero">
+      <div className="hero-content">
+        <h1>Welcome to Agricog Assist</h1>
+        <p>Your AI-powered farming companion</p>
+        <div className="hero-buttons">
+          <Link to="/signup">
+            <button className="btn-primary">Sign Up</button>
+          </Link>
+          <Link to="/login">
+            <button className="btn-secondary">Log In</button>
+          </Link>
+        </div>
       </div>
     </div>
   );
 }
+
