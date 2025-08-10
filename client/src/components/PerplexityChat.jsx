@@ -20,17 +20,21 @@ export default function PerplexityChat() {
         "https://agricogassist-backend.onrender.com/api/perplexity",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({ question }),
         }
       );
-      const data = await res.json();
-      if (res.ok) {
-        setAnswer(data.answer);
-      } else {
+
+      if (!res.ok) {
+        const data = await res.json();
         setError(data.message || "Failed to fetch response");
+      } else {
+        const data = await res.json();
+        setAnswer(data.answer);
       }
-    } catch {
+    } catch (err) {
       setError("Server error");
     } finally {
       setLoading(false);
@@ -38,22 +42,34 @@ export default function PerplexityChat() {
   }
 
   return (
-    <div className="perplexity-chat">
-      <form onSubmit={handleSubmit}>
+    <div className="perplexity-chat-container">
+      <h3 className="chat-title">Live Info Chat</h3>
+      <form className="chat-form" onSubmit={handleSubmit}>
         <input
+          className="chat-input"
           placeholder="Ask a farming question..."
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           required
+          disabled={loading}
         />
-        <button type="submit" disabled={loading}>
+        <button className="chat-button" type="submit" disabled={loading}>
           {loading ? "Thinking..." : "Ask"}
         </button>
       </form>
-      {error && <div className="error">{error}</div>}
-      {answer && <div className="answer">{answer}</div>}
+
+      {error && <div className="chat-error">{error}</div>}
+
+      {answer && (
+        <div className="chat-answer">
+          <div className="answer-header">Answer:</div>
+          <div className="answer-content">{answer}</div>
+        </div>
+      )}
     </div>
   );
 }
+
+
 
 
