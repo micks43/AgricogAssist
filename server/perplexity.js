@@ -1,12 +1,17 @@
+// server/perplexity.js
 const express = require("express");
 const fetch = require("node-fetch");
 const router = express.Router();
 
-router.post("/perplexity-chat", async (req, res) => {
-  console.log("== Received request to /perplexity-chat ==");
-  console.log("Request body:", JSON.stringify(req.body, null, 2));
-
+router.post("/perplexity", async (req, res) => {
   try {
+    const { question, messages } = req.body;
+
+    // Build messages for Perplexity: prefer provided messages, else wrap the question
+    const convo = Array.isArray(messages) && messages.length
+      ? messages
+      : [{ role: "user", content: question }];
+
     const apiRes = await fetch("https://api.perplexity.ai/chat/completions", {
       method: "POST",
       headers: {
@@ -14,28 +19,33 @@ router.post("/perplexity-chat", async (req, res) => {
         "Authorization": `Bearer ${process.env.PERPLEXITY_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "sonar-pro", // This line is now correct!
-        messages: req.body.messages,
+        model: "sonar-pro",
+        messages: convo,
       }),
     });
 
     const data = await apiRes.json();
-    console.log("== Perplexity API responded ==");
-    console.log(JSON.stringify(data, null, 2));
 
-    if (data.choices && data.choices[0] && data.choices[0].message) {
-      return res.json(data.choices[0].message);
-    } else {
-      console.warn("Unexpected response format from Perplexity API");
-      return res.status(400).json({ content: "No response from Perplexity API" });
+    if (!apiRes.ok) {
+      return res.status(apiRes.status).json({
+        message: data.error?.message || "Perplexity API error",
+      });
     }
-  } catch (error) {
-    console.error("Error calling Perplexity API:", error);
-    return res.status(500).json({ content: "Error connecting to Perplexity" });
+
+    const msg = data.choices?.[0]?.message;
+    if (msg?.content) {
+      return res.json({ answer: msg.content });
+    } else {
+      return res.status(400).json({ message: "Unexpected response from Perplexity" });
+    }
+  } catch (err) {
+    console.error("Perplexity error:", err);
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 
 module.exports = router;
+
 
 
 
