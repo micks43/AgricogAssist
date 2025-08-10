@@ -1,5 +1,3 @@
-// src/components/SignupForm.jsx
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -24,7 +22,14 @@ export default function SignupForm() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, password, farmName, location, farmType }),
+          body: JSON.stringify({
+            name,
+            email,
+            password,
+            farmName,
+            location,
+            farmType,
+          }),
         }
       );
       const data = await res.json();
@@ -87,6 +92,5 @@ export default function SignupForm() {
     </div>
   );
 }
-s
 
 
