@@ -1,3 +1,4 @@
+// server/index.js
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -8,7 +9,16 @@ const perplexity = require("./perplexity");
 
 const app = express();
 
-app.use(cors());
+// Explicit CORS settings to allow preflight for POST
+app.use(cors({
+  origin: ["https://agricog-assist.vercel.app", "http://localhost:3000"],
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+// Handle preflight explicitly
+app.options("*", cors());
+
 app.use(express.json());
 app.use("/api", auth);
 app.use("/api", users);
