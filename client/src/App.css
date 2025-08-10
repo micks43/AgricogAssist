@@ -52,4 +52,74 @@ body {
   color: #d00;
   margin-bottom: 1rem;
 }
+/* Perplexity Chat Styles */
+
+.perplexity-chat-container {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 24px;
+  max-width: 600px;
+}
+
+.chat-title {
+  margin-bottom: 16px;
+  font-size: 20px;
+  color: #2d3748;
+}
+
+.chat-form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  font-size: 16px;
+  resize: vertical;
+}
+
+.chat-button {
+  padding: 12px 24px;
+  background-color: #48bb78;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.chat-button:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+}
+
+.chat-error {
+  color: #e53e3e;
+  margin-bottom: 16px;
+}
+
+/* Answer box with colored background */
+.chat-answer {
+  background-color: #edf2f7;
+  border-left: 4px solid #48bb78;
+  border-radius: 4px;
+  padding: 16px;
+}
+
+/* Paragraph styling within answer */
+.answer-paragraph {
+  margin: 0 0 12px;
+  line-height: 1.6;
+  color: #2d3748;
+}
+
+.answer-paragraph:last-child {
+  margin-bottom: 0;
+}
 

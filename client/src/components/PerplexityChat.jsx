@@ -1,5 +1,3 @@
-// src/components/PerplexityChat.jsx
-
 import React, { useState } from "react";
 import "../App.css";
 
@@ -20,9 +18,7 @@ export default function PerplexityChat() {
         "https://agricogassist-backend.onrender.com/api/perplexity",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ question }),
         }
       );
@@ -34,7 +30,7 @@ export default function PerplexityChat() {
         const data = await res.json();
         setAnswer(data.answer);
       }
-    } catch (err) {
+    } catch {
       setError("Server error");
     } finally {
       setLoading(false);
@@ -45,13 +41,14 @@ export default function PerplexityChat() {
     <div className="perplexity-chat-container">
       <h3 className="chat-title">Live Info Chat</h3>
       <form className="chat-form" onSubmit={handleSubmit}>
-        <input
+        <textarea
           className="chat-input"
           placeholder="Ask a farming question..."
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
-          required
+          rows={3}
           disabled={loading}
+          required
         />
         <button className="chat-button" type="submit" disabled={loading}>
           {loading ? "Thinking..." : "Ask"}
@@ -62,8 +59,13 @@ export default function PerplexityChat() {
 
       {answer && (
         <div className="chat-answer">
-          <div className="answer-header">Answer:</div>
-          <div className="answer-content">{answer}</div>
+          {answer
+            .split("\n\n")
+            .map((para, i) => (
+              <p key={i} className="answer-paragraph">
+                {para}
+              </p>
+            ))}
         </div>
       )}
     </div>
