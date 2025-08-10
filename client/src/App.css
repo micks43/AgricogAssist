@@ -49,6 +49,11 @@ body {
   cursor: pointer;
 }
 
+.error {
+  color: #d00;
+  margin-bottom: 1rem;
+}
+
 /* Homepage Hero */
 .homepage-hero {
   width: 100%;
@@ -165,3 +170,4 @@ body {
 .answer-content {
   line-height: 1.5;
 }
+
