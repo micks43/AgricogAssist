@@ -95,7 +95,7 @@ export default function PerplexityChat() {
 
   return (
     <div style={containerStyle}>
-      <h3 style={titleStyle}>Live Info Chat</h3>
+      <h3 style={titleStyle}>Live Info Chat (Styled)</h3>
       <form style={formStyle} onSubmit={handleSubmit}>
         <textarea
           style={textareaStyle}
@@ -127,6 +127,7 @@ export default function PerplexityChat() {
     </div>
   );
 }
+
 
 
 
