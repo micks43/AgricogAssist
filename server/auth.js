@@ -1,75 +1,73 @@
-// server/auth.js
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const router = express.Router();
 
-const USERS = []; // In-memory store for now
-
-// Helper to log and respond
-function handleError(res, where, error) {
-  console.error(`[Signup Error][${where}]:`, error);
-  return res.status(500).json({ message: `Server error at ${where}` });
-}
+const USERS = [];
 
 router.post("/signup", async (req, res) => {
-  console.log("[Signup] Request body:", req.body);
-  const { name, email, password, farmName, location, farmType } = req.body;
-  if (!name || !email || !password || !farmName || !location || !farmType) {
-    console.warn("[Signup] Missing fields:", req.body);
-    return res.status(400).json({ message: "Missing required fields" });
+  console.log("[Signup] Incoming body:", req.body);
+  const required = ["name","email","password","farmName","location","farmType"];
+  for (const field of required) {
+    if (!req.body[field]) {
+      console.error(`[Signup] Missing field: ${field}`);
+      return res.status(400).json({ message: `Missing ${field}` });
+    }
   }
 
   try {
-    if (USERS.find(u => u.email === email)) {
+    const { name, email, password, farmName, location, farmType } = req.body;
+    const existing = USERS.find(u => u.email === email);
+    if (existing) {
       console.warn("[Signup] Duplicate email:", email);
-      return res.status(400).json({ message: "Email already exists" });
+      return res.status(400).json({ message: "Email exists" });
     }
 
-    const passwordHash = await bcrypt.hash(password, 10);
-    const newUser = {
-      name,
-      email,
-      passwordHash,
-      farmName,
-      location,
-      farmType,
-      fastbotsId: null,
-      createdAt: new Date(),
-      status: "active"
-    };
-    USERS.push(newUser);
+    const hash = await bcrypt.hash(password, 10);
+    const user = { name, email, passwordHash: hash, farmName, location, farmType };
+    USERS.push(user);
+    console.log("[Signup] User saved:", email);
 
-    console.log("[Signup] New user created:", { email, farmName });
+    // JWT_SECRET must be set
+    if (!process.env.JWT_SECRET) {
+      console.error("[Signup] Missing JWT_SECRET env var");
+      return res.status(500).json({ message: "Server configuration error" });
+    }
+    const token = jwt.sign({ email, name, farmName }, process.env.JWT_SECRET);
+    console.log("[Signup] JWT created");
 
-    // Send welcome email
-    const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: process.env.EMAIL_PORT,
-      secure: true,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-    const mailOptions = {
-      from: '"Agricog Assist" <mick@agricogassist.com>',
-      to: email,
-      subject: "Welcome to Agricog Assist – Farm Account Created!",
-      html: `<h2>Welcome ${name}!</h2><p>Your farm "${farmName}" is ready.</p>`,
-    };
-    await transporter.sendMail(mailOptions);
-    console.log("[Signup] Welcome email sent to:", email);
+    // Attempt to send email (optional)
+    if (process.env.EMAIL_HOST && process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+      const transporter = nodemailer.createTransport({
+        host: process.env.EMAIL_HOST,
+        port: Number(process.env.EMAIL_PORT) || 465,
+        secure: true,
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      });
+      await transporter.sendMail({
+        from: process.env.EMAIL_FROM,
+        to: email,
+        subject: "Welcome to Agricog Assist",
+        html: `<p>Hello ${name}, welcome!</p>`,
+      });
+      console.log("[Signup] Welcome email sent");
+    } else {
+      console.warn("[Signup] Email env vars not fully set; skipping email");
+    }
 
-    // Issue token
-    const token = jwt.sign({ name, email, farmName }, process.env.JWT_SECRET, { expiresIn: "1d" });
     return res.status(201).json({ token, name, farmName });
-  } catch (error) {
-    return handleError(res, "signup", error);
+  } catch (err) {
+    console.error("[Signup] Error:", err);
+    return res.status(500).json({ message: "Server error" });
   }
 });
 
 module.exports = router;
+
+
 
 
