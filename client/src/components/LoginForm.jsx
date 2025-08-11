@@ -18,7 +18,7 @@ export default function LoginForm() {
 
     try {
       const res = await fetch(
-        "https://api.agricogassist.com/api/login",
+        "https://agricogassist-backend.onrender.com/api/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
