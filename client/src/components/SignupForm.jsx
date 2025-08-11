@@ -22,7 +22,7 @@ export default function SignupForm() {
 
     try {
       const res = await fetch(
-        "https://api.agricogassist.com/api/signup",
+        "https://agricogassist-backend.onrender.com/api/signup",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -96,6 +96,7 @@ export default function SignupForm() {
     </form>
   );
 }
+
 
 
 
