@@ -1,5 +1,3 @@
-// client/src/components/LoginForm.jsx
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -18,7 +16,7 @@ export default function LoginForm() {
 
     try {
       const res = await fetch(
-        "https://agricogassist-backend.onrender.com/api/login",
+        "https://api.agricogassist.com/api/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -61,6 +59,7 @@ export default function LoginForm() {
     </form>
   );
 }
+
 
 
 

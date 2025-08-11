@@ -1,5 +1,3 @@
-// client/src/components/SignupForm.jsx
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -22,7 +20,7 @@ export default function SignupForm() {
 
     try {
       const res = await fetch(
-        "https://agricogassist-backend.onrender.com/api/signup",
+        "https://api.agricogassist.com/api/signup",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
