@@ -1,78 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
+import "./WeatherForecast.css";
 
-// Helper to group entries by ISO date (YYYY-MM-DD)
-function groupByDate(entries) {
-  const days = {};
-  entries.forEach(entry => {
-    // dt_txt comes as "2025-07-19 12:00:00"
-    const dateKey = entry.dt_txt.split(" ")[0]; // "YYYY-MM-DD"
-    if (!days[dateKey]) days[dateKey] = [];
-    days[dateKey].push(entry);
-  });
-  return days;
-}
+export default function WeatherForecast() {
+  const [city, setCity] = useState("");
+  const [forecast, setForecast] = useState([]);
 
-export default function WeatherForecast({ forecast }) {
-  // Defensive defaults
-  const daily = forecast && Array.isArray(forecast.daily) ? forecast.daily : [];
-
-  const grouped = groupByDate(daily);
-  const dateKeys = Object.keys(grouped).slice(0, 5);
+  const fetchForecast = async () => {
+    const res = await fetch(`/api/weather?city=${encodeURIComponent(city)}`);
+    const data = await res.json();
+    setForecast(data.daily || []);
+  };
 
   return (
-    <div className="forecast-container">
-      {dateKeys.length === 0 ? (
-        <div>No forecast available.</div>
-      ) : (
-        dateKeys.map(dateKey => (
-          <div key={dateKey}>
-            <h3 style={{ marginTop: "1.5em", marginBottom: "0.5em" }}>
-              {new Date(dateKey).toLocaleDateString("en-GB", {
-                weekday: "long",
-                day: "numeric",
-                month: "long"
-              })} forecast
-            </h3>
-            <div className="forecast-list">
-              {grouped[dateKey].map((entry, i) => (
-                <div
-                  key={i}
-                  className="forecast-entry"
-                  style={{
-                    borderBottom: "1px solid #eee",
-                    marginBottom: 8,
-                    paddingBottom: 8
-                  }}
-                >
-                  <strong>
-                    {entry.dt_txt
-                      ? new Date(entry.dt_txt).toLocaleTimeString("en-GB", {
-                          hour: "2-digit",
-                          minute: "2-digit"
-                        })
-                      : "N/A"}
-                  </strong>{" "}
-                  {entry.weather && entry.weather[0] && (
-                    <>
-                      <img
-                        src={`https://openweathermap.org/img/wn/${entry.weather[0].icon}@2x.png`}
-                        alt={entry.weather[0].description}
-                        style={{ verticalAlign: "middle" }}
-                      />
-                      <span style={{ marginLeft: 4 }}>{entry.weather[0].description}</span>
-                    </>
-                  )}
-                  <div>
-                    Temperature:{" "}
-                    {entry.main && entry.main.temp !== undefined
-                      ? Math.round(entry.main.temp)
-                      : "N/A"}°C
-                  </div>
-                </div>
-              ))}
+    <div className="weather-forecast-container">
+      <h3>☀️ Weather Forecast</h3>
+      <div className="weather-form">
+        <input
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          placeholder="Enter town or village"
+        />
+        <button onClick={fetchForecast}>Get Forecast</button>
+      </div>
+      {forecast.length > 0 && (
+        <div className="forecast-cards">
+          {forecast.map((day) => (
+            <div key={day.dt} className="forecast-card">
+              <div>{new Date(day.dt * 1000).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })}</div>
+              <div>{Math.round(day.temp.max)}° / {Math.round(day.temp.min)}°</div>
+              <div>{day.weather[0].description}</div>
             </div>
-          </div>
-        ))
+          ))}
+        </div>
       )}
     </div>
   );

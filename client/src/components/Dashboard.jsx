@@ -1,77 +1,35 @@
-// src/components/Dashboard.jsx
-
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext";
 import WeatherForecast from "./WeatherForecast";
 import PerplexityChat from "./PerplexityChat";
-import "../App.css";
+import FastBotsChat from "./FastBotsChat"; // your existing memory chat
 
-export default function Dashboard() {
-  const { user, farmName, logout } = useAuth();
+export default function Dashboard({ user, onLogout }) {
   const [location, setLocation] = useState("");
-  const [forecast, setForecast] = useState(null);
-  const [error, setError] = useState("");
-
-  async function fetchForecast(e) {
-    e.preventDefault();
-    setError("");
-    try {
-      const res = await fetch(
-        `https://agricogassist-backend.onrender.com/api/weather?location=${encodeURIComponent(
-          location
-        )}`
-      );
-      const data = await res.json();
-      if (res.ok) setForecast(data);
-      else setError(data.message || "Failed to fetch forecast");
-    } catch {
-      setError("Could not fetch weather");
-    }
-  }
 
   return (
-    <div className="dashboard">
-      <div className="dashboard-header">
-        <div>
-          <span>Hello, {user}</span>
-          <div className="farm-info">🚜 {farmName} Farm Dashboard</div>
-        </div>
-        <button className="btn-logout" onClick={logout}>
-          Logout
-        </button>
-      </div>
+    <div className="dashboard-container">
+      <header className="dashboard-header">
+        <h1>Hello {user.name}, Welcome to your</h1>
+        <h2>🚜 Help Dashboard</h2>
+        <button className="btn-logout" onClick={onLogout}>Logout</button>
+      </header>
 
-      <form className="location-form" onSubmit={fetchForecast}>
-        <input
-          placeholder="Enter town or village"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          required
-        />
-        <button type="submit">Show Forecast</button>
-      </form>
+      <section className="weather-section">
+        <WeatherForecast />
+      </section>
 
-      {error && <div className="error">{error}</div>}
-      {forecast && <WeatherForecast forecast={forecast} />}
+      <section className="perplexity-section">
+        <h3>🌱 Latest Agri Info Chat</h3>
+        <PerplexityChat />
+      </section>
 
-      {/* --- Start Chatbots Section --- */}
-      <div className="dashboard-chats">
-        <section className="chat-section">
-          <h2>Live Info Chat (Perplexity)</h2>
-          <PerplexityChat />
-        </section>
-        <section className="chat-section">
-          <h2>Farm Memory Chat (FastBots)</h2>
-          <iframe
-            src="https://app.fastbots.ai/embed/cmcuvry22008boelv6guop4fa"
-            style={{ width: "100%", height: "600px", border: "none", borderRadius: "12px" }}
-            title="Farm Memory Chat"
-          />
-        </section>
-      </div>
-      {/* --- End Chatbots Section --- */}
+      <section className="fastbots-section">
+        <h3>🤖 Farm Memory Chat (FastBots)</h3>
+        <FastBotsChat />
+      </section>
     </div>
-  );
+);
 }
+
 
 
