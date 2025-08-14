@@ -1,9 +1,7 @@
 {
   "name": "agricog-assist-server",
   "version": "1.0.0",
-  "description": "Backend for Agricog Assist App",
   "main": "index.js",
-  "type": "commonjs",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js"
@@ -11,10 +9,10 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
+    "dotenv": "^16.6.1",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
-    "node-fetch": "^2.6.12",
+    "node-fetch": "^2.7.0",
     "nodemailer": "^7.0.5"
   },
   "devDependencies": {
