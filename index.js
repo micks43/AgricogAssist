@@ -11,24 +11,30 @@ const perplexityRouter = require("./perplexity");
 
 const app = express();
 
-app.use(cors({
-  origin: [
-    "https://www.agricogassist.com",
-    "https://agricog-assist.vercel.app",
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "http://localhost:3002",
-    "http://localhost:3003",
-    "http://localhost:5173",
-  ],
-  methods: ["GET","POST","PUT","DELETE","OPTIONS"],
-  allowedHeaders: ["Content-Type","Authorization"],
-  credentials: true,
-}));
+// Enable CORS for your frontend domains and localhost during development
+app.use(
+  cors({
+    origin: [
+      "https://www.agricogassist.com",
+      "https://agricog-assist.vercel.app",
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "http://localhost:3002",
+      "http://localhost:3003",
+      "http://localhost:5173",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
+// Pre-flight support
 app.options("*", cors());
 
+// Enable JSON body parsing
 app.use(express.json());
 
+// Mount your routers under /api
 app.use("/api", authRouter);
 app.use("/api", usersRouter);
 app.use("/api", weatherRouter);
@@ -38,6 +44,7 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
 
 
 
