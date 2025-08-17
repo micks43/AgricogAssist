@@ -1,69 +1,132 @@
+// src/components/PerplexityChat.jsx
+
 import React, { useState } from "react";
-import "./PerplexityChat.css"; // add styles as needed
 
 export default function PerplexityChat() {
-  const [userInput, setUserInput] = useState("");
-  const [chatHistory, setChatHistory] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const API_BASE = process.env.REACT_APP_API_URL || "https://api.agricogassist.com";
-
-  const handleSubmit = async (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
-    if (!userInput.trim()) return;
-
-    setChatHistory((prev) => [...prev, { role: "user", content: userInput }]);
-    setIsLoading(true);
+    setError("");
+    setAnswer("");
+    setLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE}/api/perplexity`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: userInput }),
-      });
-      if (!res.ok) throw new Error(res.statusText);
-      const { answer } = await res.json();
-
-      setChatHistory((prev) => [...prev, { role: "ai", content: answer }]);
-    } catch (err) {
-      console.error(err);
-      setChatHistory((prev) => [
-        ...prev,
-        { role: "ai", content: "Error retrieving answer. Please try again." },
-      ]);
+      const res = await fetch(
+        "https://agricogassist-backend.onrender.com/api/perplexity",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question }),
+        }
+      );
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.message || "Failed to fetch response");
+      } else {
+        const data = await res.json();
+        setAnswer(data.answer);
+      }
+    } catch {
+      setError("Server error");
     } finally {
-      setIsLoading(false);
-      setUserInput("");
+      setLoading(false);
     }
+  }
+
+  const containerStyle = {
+    background: "#fff",
+    border: "1px solid #e2e8f0",
+    borderRadius: "8px",
+    padding: "20px",
+    marginTop: "24px",
+    maxWidth: "600px",
+    fontFamily: "Arial, sans-serif",
+  };
+
+  const titleStyle = {
+    marginBottom: "16px",
+    fontSize: "20px",
+    color: "#2d3748",
+  };
+
+  const formStyle = {
+    display: "flex",
+    gap: "12px",
+    marginBottom: "16px",
+  };
+
+  const textareaStyle = {
+    flex: 1,
+    padding: "12px",
+    border: "1px solid #cbd5e0",
+    borderRadius: "6px",
+    fontSize: "16px",
+    resize: "vertical",
+    fontFamily: "inherit",
+  };
+
+  const buttonStyle = {
+    padding: "12px 24px",
+    backgroundColor: loading ? "#a0aec0" : "#48bb78",
+    color: "#fff",
+    border: "none",
+    borderRadius: "6px",
+    fontSize: "16px",
+    cursor: loading ? "not-allowed" : "pointer",
+  };
+
+  const errorStyle = {
+    color: "#e53e3e",
+    marginBottom: "16px",
+  };
+
+  const answerContainerStyle = {
+    backgroundColor: "#edf2f7",
+    borderLeft: "4px solid #48bb78",
+    borderRadius: "4px",
+    padding: "16px",
+    color: "#2d3748",
+    lineHeight: "1.6",
   };
 
   return (
-    <div className="perplexity-chat-container">
-      <div className="chat-window">
-        {chatHistory.map((m, i) => (
-          <div key={i} className={`chat-bubble ${m.role}-bubble`}>
-            <strong>{m.role === "user" ? "You:" : "AI:"}</strong> {m.content}
-          </div>
-        ))}
-        {isLoading && <div className="chat-bubble ai-bubble">AI is typing…</div>}
-      </div>
-
-      <form className="chat-form" onSubmit={handleSubmit}>
+    <div style={containerStyle}>
+      <h3 style={titleStyle}>Live Info Chat (Styled)</h3>
+      <form style={formStyle} onSubmit={handleSubmit}>
         <textarea
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-          placeholder="Ask a farming question..."
-          rows={2}
-          disabled={isLoading}
+          style={textareaStyle}
+          placeholder="Ask a farming question…"
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+          rows={3}
+          disabled={loading}
+          required
         />
-        <button type="submit" disabled={isLoading || !userInput.trim()}>
-          {isLoading ? "…" : "Ask"}
+        <button style={buttonStyle} type="submit" disabled={loading}>
+          {loading ? "Thinking…" : "Ask"}
         </button>
       </form>
+
+      {error && <div style={errorStyle}>{error}</div>}
+
+      {answer && (
+        <div style={answerContainerStyle}>
+          {answer
+            .split("\n\n")
+            .map((para, i) => (
+              <p key={i} style={{ margin: "0 0 12px" }}>
+                {para}
+              </p>
+            ))}
+        </div>
+      )}
     </div>
   );
 }
-
 
 
 
